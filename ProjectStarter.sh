@@ -17,13 +17,13 @@ echo "[3] Node + Front-End Project Starter"
 read installOption
 
 if [[ $installOption -eq 1 ]]; then
-	git clone https://github.com/nailliK/project-starter.git $installTarget
+	git clone https://bitbucket.org/spiremedia/starter-front-end.git $installTarget
 fi
 
 if [[ $installOption -eq 2 ]]; then
 	# clone repositories
-	git clone https://github.com/nailliK/project-starter.git $installTarget/frontend
-	git clone https://github.com/glenb0/laravel5starter.git $installTarget/laravel
+	git clone https://bitbucket.org/spiremedia/starter-front-end.git $installTarget/frontend
+	git clone https://bitbucket.org/spiremedia/starter-laravel.git $installTarget/laravel
 	
 	# move necessary files to project root
 	mv -f $installTarget/frontend/gulpfile.js $installTarget/laravel
@@ -62,8 +62,8 @@ fi
 
 if [[ $installOption -eq 3 ]]; then
 	# clone repositories
-	git clone https://github.com/nailliK/project-starter.git $installTarget/frontend
-	git clone https://github.com/devKate/node-project-starter.git $installTarget/node
+	git clone https://bitbucket.org/spiremedia/starter-front-end.git $installTarget/frontend
+	git clone https://bitbucket.org/spiremedia/starter-express.git $installTarget/node
 	git clone https://github.com/jaredsohn/mergejson.git $installTarget/mergejson
 	
 	# move necessary files to project root
