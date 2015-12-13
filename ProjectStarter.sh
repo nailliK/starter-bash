@@ -2,10 +2,8 @@
 
 PWD="`pwd`"
 
-echo ${PWD}
-
 # set target directory name
-echo "Please provide a directory name for your project"
+echo "Please provide a directory name for your web root"
 read installTarget
 mkdir $installTarget
 
@@ -26,7 +24,6 @@ if [[ $installOption -eq 2 ]]; then
 	git clone https://bitbucket.org/spiremedia/starter-laravel.git $installTarget/laravel
 	
 	# move necessary files to project root
-	mv -f $installTarget/frontend/gulpfile.js $installTarget/laravel
 	mv -f $installTarget/frontend/package.json $installTarget/laravel
 	mv -f $installTarget/frontend/editorconfig $installTarget/laravel
 	mv -f $installTarget/frontend/.eslintrc $installTarget/laravel
@@ -36,12 +33,12 @@ if [[ $installOption -eq 2 ]]; then
 	cp -a $installTarget/frontend/src/. $installTarget/laravel/resources/assets/
 	
 	# set build path
-	sed -i.bak "s~'build/'~'public/'~g" $installTarget/laravel/gulpfile.js
-	rm  $installTarget/laravel/gulpfile.js.bak
+	sed -i.bak 's~"build"~"public"~g' $installTarget/laravel/package.json
+	rm  $installTarget/laravel/package.json.bak
 	
 	# set source path
-	sed -i.bak "s~'src/'~'resources/assets/'~g" $installTarget/laravel/gulpfile.js
-	rm  $installTarget/laravel/gulpfile.js.bak
+	sed -i.bak 's~"src"~"resources/assets"~g' $installTarget/laravel/package.json
+	rm  $installTarget/laravel/package.json.bak
 	
 	# change css and javascript directory in welcome script
 	sed -i.bak "s/build//g" $installTarget/laravel/resources/views/welcome.blade.php
@@ -54,10 +51,14 @@ if [[ $installOption -eq 2 ]]; then
 	rm -r -f $installTarget/laravel
 	rm -r -f $installTarget/frontend
 	
+	# make public folder and add index.php and .htaccess files
+	mkdir $installTarget/public
+	mv -f $installTarget/_index.php $installTarget/public/index.php
+	mv -f $installTarget/_htaccess $installTarget/public/.htaccess
+	
 	# update packages
 	npm install --prefix $installTarget
 	composer install --working-dir $installTarget
-	gulp build --gulpfile $installTarget/gulpfile.js
 fi
 
 if [[ $installOption -eq 3 ]]; then
@@ -67,7 +68,6 @@ if [[ $installOption -eq 3 ]]; then
 	git clone https://github.com/jaredsohn/mergejson.git $installTarget/mergejson
 	
 	# move necessary files to project root
-	mv -f $installTarget/frontend/gulpfile.js $installTarget/node
 	mv -f $installTarget/frontend/editorconfig $installTarget/node
 	mv -f $installTarget/frontend/.eslintrc $installTarget/node
 	
@@ -93,8 +93,8 @@ if [[ $installOption -eq 3 ]]; then
 	touch $installTarget/node/public/favicon.ico
 	
 	# set build path
-	sed -i.bak "s~'build/'~'public/'~g" $installTarget/node/gulpfile.js
-	rm  $installTarget/node/gulpfile.js.bak
+	sed -i.bak 's~"build"~"public"~g' $installTarget/package.json
+	rm  $installTarget/package.json.bak
 	
 	# move laravel contents to root
 	cp -a $installTarget/node/. $installTarget/
@@ -105,7 +105,6 @@ if [[ $installOption -eq 3 ]]; then
 	
 	# update packages
 	npm install --prefix $installTarget
-	gulp build --gulpfile $installTarget/gulpfile.js
 fi
 
 echo "all done!"
