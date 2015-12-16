@@ -104,7 +104,7 @@ if [[ $installOption -eq 2 ]]; then
 	
 	# move necessary files to project root
 	mv -f $installTarget/frontend/package.json $installTarget/laravel
-	mv -f $installTarget/frontend/editorconfig $installTarget/laravel
+	mv -f $installTarget/frontend/.editorconfig $installTarget/laravel
 	mv -f $installTarget/frontend/.eslintrc $installTarget/laravel
 	mv -f $installTarget/frontend/index.html $installTarget/laravel/resources/views/welcome.blade.php
 	
@@ -147,7 +147,7 @@ if [[ $installOption -eq 3 ]]; then
 	git clone https://github.com/jaredsohn/mergejson.git $installTarget/mergejson
 
 	# move necessary files to project root
-	mv -f $installTarget/frontend/editorconfig $installTarget/node
+	mv -f $installTarget/frontend/.editorconfig $installTarget/node
 	mv -f $installTarget/frontend/.eslintrc $installTarget/node
 	
 	# install mergeJSON library + dependencies
