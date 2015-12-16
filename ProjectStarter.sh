@@ -38,7 +38,7 @@ echo "
 ████████████████████████████████████████████████████████████████████████████████
 ████████████████████████████████████████████████████████████████████████████████
 ████████████████████████████████████████████████████████████████████████████████
-█████████████████████████████████████████████████SPIRE DIGITAL - Project Starter"
+████████████████████████████████████████████████ SPIRE DIGITAL - PROJECT STARTER"
 echo ""
 
 git_bb_clone () {
@@ -79,6 +79,11 @@ echo "Bitbucket Git clone protocol"
 echo "  [1] https"
 echo "  [2] ssh"
 read -p 'Choice [1, 2]: ' cloneOption
+
+if [[ $installOption -eq 1 ]]; then
+	# clone repository
+	git_bb_clone $cloneOption starter-front-end.git $installTarget
+fi
 
 
 if [[ $installOption -eq 2 ]]; then
