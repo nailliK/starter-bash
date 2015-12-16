@@ -1,27 +1,90 @@
 #!/bin/bash
 
+echo "
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+██████████████████████                                  ████████████████████████
+█████████████████                                     ██████████████████████████
+██████████████                                      ████████████████████████████
+████████████                                      ██████████████████████████████
+███████████                                     ████████████████████████████████
+██████████                                    ██████████████████████████████████
+██████████                                  ███████         ████████████████████
+██████████                                ███████               ████████████████
+██████████                              ███████                   ██████████████
+███████████                           ███████                       ████████████
+████████████                        ███████                          ███████████
+█████████████                     ███████                             ██████████
+███████████████                 ███████                               ██████████
+██████████████████            ███████                                 ██████████
+███████████████████████████████████                                   ██████████
+█████████████████████████████████                                    ███████████
+███████████████████████████████                                     ████████████
+█████████████████████████████                                      █████████████
+███████████████████████████                                      ███████████████
+██████████████████████████                                   ███████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+████████████████████████████████████████████████████████████████████████████████
+█████████████████████████████████████████████████SPIRE DIGITAL - Project Starter"
+echo ""
+
+git_bb_clone () {
+	local protocol=$1
+	local repo=$2
+	local target=$3
+
+	# echo "two $2"
+	if [[ $protocol -eq 1 ]]; then
+		# git clone https://bitbucket.org/spiremedia/starter-front-end.git $installTarget
+		echo "git clone https://bitbucket.org/spiremedia/$repo $target"
+		git clone https://bitbucket.org/spiremedia/$repo $target
+	elif [[ $protocol -eq 2 ]]; then
+		# git clone git@bitbucket.org:spiremedia/starter-front-end.git $installTarget
+		echo "git clone git@bitbucket.org:spiremedia/$repo $target"
+		git clone git@bitbucket.org:spiremedia/$repo $target
+	fi
+}
+
 PWD="`pwd`"
 
 # set target directory name
 echo "Please provide a directory name for your web root"
-read installTarget
+read -p 'Directory name: ' installTarget
 mkdir $installTarget
 
 # choose installation type
-echo "Please choose the following options:"
-echo "[1] Front-End Project Starter Only"
-echo "[2] Laravel 5 + Front-End Project Starter"
-echo "[3] Node + Front-End Project Starter"
-read installOption
+echo ""
+echo "Please choose one of the following options:"
+echo "  [1] Front-End Project Starter Only"
+echo "  [2] Laravel 5 + Front-End Project Starter"
+echo "  [3] Node + Front-End Project Starter"
+read -p 'Choice [1, 2, 3]: ' installOption
 
-if [[ $installOption -eq 1 ]]; then
-	git clone https://bitbucket.org/spiremedia/starter-front-end.git $installTarget
-fi
+# choose git clone protocol
+echo ""
+echo "Bitbucket Git clone protocol"
+echo "  [1] https"
+echo "  [2] ssh"
+read -p 'Choice [1, 2]: ' cloneOption
+
 
 if [[ $installOption -eq 2 ]]; then
 	# clone repositories
-	git clone https://bitbucket.org/spiremedia/starter-front-end.git $installTarget/frontend
-	git clone https://bitbucket.org/spiremedia/starter-laravel.git $installTarget/laravel
+	git_bb_clone  $cloneOption starter-front-end.git $installTarget/frontend
+	git_bb_clone  $cloneOption starter-laravel.git $installTarget/laravel
 	
 	# move necessary files to project root
 	mv -f $installTarget/frontend/package.json $installTarget/laravel
@@ -63,10 +126,10 @@ fi
 
 if [[ $installOption -eq 3 ]]; then
 	# clone repositories
-	git clone https://bitbucket.org/spiremedia/starter-front-end.git $installTarget/frontend
-	git clone https://bitbucket.org/spiremedia/starter-express.git $installTarget/node
+	git_bb_clone $cloneOption starter-front-end.git $installTarget/frontend
+	git_bb_clone $cloneOption starter-express.git $installTarget/node
 	git clone https://github.com/jaredsohn/mergejson.git $installTarget/mergejson
-	
+
 	# move necessary files to project root
 	mv -f $installTarget/frontend/editorconfig $installTarget/node
 	mv -f $installTarget/frontend/.eslintrc $installTarget/node
