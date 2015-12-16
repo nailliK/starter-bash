@@ -61,13 +61,10 @@ git_bb_clone () {
 	local repo=$2
 	local target=$3
 
-	# echo "two $2"
 	if [[ $protocol -eq 1 ]]; then
-		# git clone https://bitbucket.org/spiremedia/starter-front-end.git $installTarget
 		echo "git clone https://bitbucket.org/spiremedia/$repo $target"
 		git clone https://bitbucket.org/spiremedia/$repo $target
 	elif [[ $protocol -eq 2 ]]; then
-		# git clone git@bitbucket.org:spiremedia/starter-front-end.git $installTarget
 		echo "git clone git@bitbucket.org:spiremedia/$repo $target"
 		git clone git@bitbucket.org:spiremedia/$repo $target
 	fi
