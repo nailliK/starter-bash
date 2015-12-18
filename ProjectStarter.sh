@@ -54,7 +54,7 @@ function typewriter
     done
 }
 
-typewriter "${logo}" .000001
+# typewriter "${logo}" .000001
 
 git_bb_clone () {
 	local protocol=$1
@@ -83,7 +83,8 @@ echo "Please choose one of the following options:"
 echo "  [1] Front-End Project Starter Only"
 echo "  [2] Laravel 5 + Front-End Project Starter"
 echo "  [3] Node + Front-End Project Starter"
-read -p 'Choice [1, 2, 3]: ' installOption
+echo "  [4] Wordpress + Theme Project Starter"
+read -p 'Choice [1, 2, 3, 4]: ' installOption
 
 # choose git clone protocol
 echo ""
@@ -184,6 +185,55 @@ if [[ $installOption -eq 3 ]]; then
 	
 	# update packages
 	npm install --prefix $installTarget
+fi
+
+if [[ $installOption -eq 4 ]]; then
+	# clone repositories
+	git clone https://github.com/WordPress/WordPress $installTarget/wordpress
+	git_bb_clone $cloneOption starter-front-end.git $installTarget/frontend
+	git_bb_clone $cloneOption starter-wordpress.git $installTarget/Spire
+	
+	# don't require jQuery
+	sed -i.bak "s~ = require('jquery');~;~g" $installTarget/frontend/src/js/main.js
+	rm  $installTarget/frontend/src/js/main.js.bak
+	
+	# move front-end code into the theme folder
+	cp -a $installTarget/frontend/. $installTarget/Spire
+	
+	# Extract plugins from theme Extras folder
+	for zip in $installTarget/Spire/Extras/*.zip
+	do
+		unzip $zip -d $installTarget/wordpress/wp-content/plugins
+	done
+	
+	# move modified wp-config.php file
+	mv $installTarget/Spire/Extras/wp-config.php $installTarget/wordpress
+	
+	#remove sample wp-config file
+	rm -f $installTarget/wordpress/wp-config-sample.php
+		
+	#move front-end files into theme folder
+	mkdir $installTarget/Spire/src
+	mv -f $installTarget/frontend/.editorconfig $installTarget/Spire
+	mv -f $installTarget/frontend/.eslintrc $installTarget/Spire
+	mv -f $installTarget/frontend/.gitignore $installTarget/Spire
+	mv -f $installTarget/frontend/package.json $installTarget/Spire
+	cp -a $installTarget/frontend/src/. $installTarget/Spire/src
+	
+	# remove unnecessary directories
+	rm -r -f $installTarget/Spire/Extras
+	rm -r -f $installTarget/frontend
+
+	# update packages
+	npm install --prefix $installTarget/Spire
+	
+	# move theme to wordpress/themes directory
+	mv $installTarget/Spire $installTarget/wordpress/wp-content/themes
+	
+	#move wordpress contents to the project root
+	cp -a $installTarget/wordpress/. $installTarget/
+	rm -r -f $installTarget/wordpress
+	rm -r -f $installTarget/.git
 fi
 
 echo "all done!"
