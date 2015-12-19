@@ -54,7 +54,7 @@ function typewriter
     done
 }
 
-# typewriter "${logo}" .000001
+typewriter "${logo}" .000001
 
 git_bb_clone () {
 	local protocol=$1
