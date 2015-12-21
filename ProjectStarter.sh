@@ -193,6 +193,11 @@ if [[ $installOption -eq 4 ]]; then
 	git_bb_clone $cloneOption starter-front-end.git $installTarget/frontend
 	git_bb_clone $cloneOption starter-wordpress.git $installTarget/Spire
 	
+	# remove git files
+	rm -r -f $installTarget/wordpress/.git
+	rm -r -f $installTarget/frontend/.git
+	rm -r -f $installTarget/Spire/.git
+	
 	# don't require jQuery
 	sed -i.bak "s~ = require('jquery');~;~g" $installTarget/frontend/src/js/main.js
 	rm  $installTarget/frontend/src/js/main.js.bak
@@ -211,6 +216,9 @@ if [[ $installOption -eq 4 ]]; then
 	
 	#remove sample wp-config file
 	rm -f $installTarget/wordpress/wp-config-sample.php
+	
+	# remove old index.html file
+	rm -f $installTarget/frontend/index.html
 		
 	#move front-end files into theme folder
 	mkdir $installTarget/Spire/src
