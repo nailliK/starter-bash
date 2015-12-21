@@ -216,10 +216,7 @@ if [[ $installOption -eq 4 ]]; then
 	
 	#remove sample wp-config file
 	rm -f $installTarget/wordpress/wp-config-sample.php
-	
-	# remove old index.html file
-	rm -f $installTarget/frontend/index.html
-		
+			
 	#move front-end files into theme folder
 	mkdir $installTarget/Spire/src
 	mv -f $installTarget/frontend/.editorconfig $installTarget/Spire
@@ -231,6 +228,9 @@ if [[ $installOption -eq 4 ]]; then
 	# remove unnecessary directories
 	rm -r -f $installTarget/Spire/Extras
 	rm -r -f $installTarget/frontend
+
+	# remove old index.html file
+	rm -f $installTarget/Spire/index.html
 
 	# update packages
 	npm install --prefix $installTarget/Spire
