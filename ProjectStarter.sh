@@ -103,6 +103,10 @@ if [[ $installOption -eq 2 ]]; then
 	git_bb_clone  $cloneOption starter-front-end.git $installTarget/frontend
 	git_bb_clone  $cloneOption starter-laravel.git $installTarget/laravel
 	
+	# remove git files
+	rm -r -f $installTarget/frontend/.git
+	rm -r -f $installTarget/laravel/.git
+	
 	# move necessary files to project root
 	mv -f $installTarget/frontend/package.json $installTarget/laravel
 	mv -f $installTarget/frontend/.editorconfig $installTarget/laravel
@@ -146,6 +150,10 @@ if [[ $installOption -eq 3 ]]; then
 	git_bb_clone $cloneOption starter-front-end.git $installTarget/frontend
 	git_bb_clone $cloneOption starter-express.git $installTarget/node
 	git clone https://github.com/jaredsohn/mergejson.git $installTarget/mergejson
+	
+	# remove git files
+	rm -r -f $installTarget/node/.git
+	rm -r -f $installTarget/frontend/.git
 
 	# move necessary files to project root
 	mv -f $installTarget/frontend/.editorconfig $installTarget/node
