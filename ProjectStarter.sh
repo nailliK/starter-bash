@@ -84,7 +84,8 @@ echo "  [1] Front-End Project Starter Only"
 echo "  [2] Laravel 5 + Front-End Project Starter"
 echo "  [3] Node + Front-End Project Starter"
 echo "  [4] Wordpress + Theme Project Starter"
-read -p 'Choice [1, 2, 3, 4]: ' installOption
+echo "  [5] Drupal 7 + Front-End Project Starter"
+read -p 'Choice [1, 2, 3, 4, 5]: ' installOption
 
 # choose git clone protocol
 echo ""
@@ -251,5 +252,57 @@ if [[ $installOption -eq 4 ]]; then
 	rm -r -f $installTarget/wordpress
 	rm -r -f $installTarget/.git
 fi
+
+if [[ $installOption -eq 5 ]]; then
+	# Is Drush installed?
+	if hash drush 2>/dev/null; then
+		echo "Found Drush"
+	else
+		echo "Installing Drush"
+		wget http://files.drush.org/drush.phar
+		chmod +x drush.phar
+		sudo mv drush.phar /usr/local/bin/drush
+		drush init
+	fi
+	# Fetch the starter-drupal, which gives us both our theme and the drush make file.
+	git_bb_clone $cloneOption starter-drupal $installTarget/starter-drupal
+	drush make $installTarget/starter-drupal/spiredigital_drupal.make.yml $installTarget/drupal
+	
+	git_bb_clone  $cloneOption starter-front-end.git $installTarget/frontend
+
+	# remove git files
+	rm -r -f $installTarget/starter-drupal/.git
+	rm -r -f $installTarget/frontend/.git
+
+	# move theme to Drupal:
+	mkdir $installTarget/drupal/sites/all/themes/contrib
+	mkdir $installTarget/drupal/sites/all/themes/contrib/starter
+	cp -a $installTarget/starter-drupal/theme/* $installTarget/drupal/sites/all/themes/contrib/starter
+
+	# change compass target
+	sed -i.bak 's~"build/css"~"public/css"~g' $installTarget/frontend/src/config.rb
+	rm  $installTarget/frontend/src/config.rb.bak
+
+	# move necessary files to theme
+	mkdir $installTarget/drupal/sites/all/themes/contrib/starter/src
+	mv -f $installTarget/frontend/.editorconfig $installTarget/drupal
+	mv -f $installTarget/frontend/.eslintrc $installTarget/drupal
+	# do we need to append this?
+	mv -f $installTarget/frontend/.gitignore $installTarget/drupal/sites/all/themes/contrib/starter
+	mv -f $installTarget/frontend/package.json $installTarget/drupal/sites/all/themes/contrib/starter
+	cp -a $installTarget/frontend/src/. $installTarget/drupal/sites/all/themes/contrib/starter/src
+
+	# remove frontend code
+	rm -r -f $installTarget/frontend
+	rm -r -f $installTarget/starter-drupal
+
+	# update packages
+	npm install --prefix $installTarget/drupal/sites/all/themes/contrib/starter
+
+	#move drupal contents to the project root
+	cp -a $installTarget/drupal/. $installTarget/
+	rm -r -f $installTarget/drupal
+fi
+
 
 echo "all done!"
