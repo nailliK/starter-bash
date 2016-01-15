@@ -85,7 +85,8 @@ echo "  [2] Laravel 5 + Front-End Project Starter"
 echo "  [3] Node + Front-End Project Starter"
 echo "  [4] Wordpress + Theme Project Starter"
 echo "  [5] Drupal 7 + Front-End Project Starter"
-read -p 'Choice [1, 2, 3, 4, 5]: ' installOption
+echo "  [6] Slim Framework + Front-End Project Starter"
+read -p 'Choice [1, 2, 3, 4, 5, 6]: ' installOption
 
 # choose git clone protocol
 echo ""
@@ -141,9 +142,9 @@ if [[ $installOption -eq 2 ]]; then
 	mv -f $installTarget/_index.php $installTarget/public/index.php
 	mv -f $installTarget/_htaccess $installTarget/public/.htaccess
 	
-	# update packages
+	# install node modules and compass libraries
 	npm install --prefix $installTarget
-	composer install --working-dir $installTarget
+	composer install -d $installTarget
 fi
 
 if [[ $installOption -eq 3 ]]; then
@@ -304,5 +305,36 @@ if [[ $installOption -eq 5 ]]; then
 	rm -r -f $installTarget/drupal
 fi
 
+if [[ $installOption -eq 6 ]]; then
+	# Clone Repositories
+	git_bb_clone $cloneOption starter-front-end.git $installTarget/frontend
+	git_bb_clone $cloneOption starter-slim.git $installTarget/slim
+	
+	# remove git files
+	rm -r -f $installTarget/slim/.git
+	rm -r -f $installTarget/frontend/.git
+
+	# move necessary files to project root
+	mv -f $installTarget/frontend/.editorconfig $installTarget/slim
+	mv -f $installTarget/frontend/.gitignore $installTarget/slim
+	mv -f $installTarget/frontend/.eslintrc $installTarget/slim
+	mv -f $installTarget/frontend/package.json $installTarget/slim
+	cp -a $installTarget/frontend/src/. $installTarget/slim/src
+	
+	# set build path
+	sed -i.bak 's~"build"~"public"~g' $installTarget/slim/package.json
+	rm  $installTarget/slim/package.json.bak
+	
+	# copy files to root
+	cp -a $installTarget/slim/. $installTarget
+	
+	# remove unused directories
+	rm -r -f $installTarget/frontend
+	rm -r -f $installTarget/slim
+	
+	# install node modules and compass libraries
+	npm install --prefix $installTarget
+	composer install -d $installTarget
+fi
 
 echo "all done!"
