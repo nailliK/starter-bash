@@ -122,6 +122,9 @@ if [[ $installOption -eq 2 ]]; then
 	sed -i.bak 's~"build"~"public"~g' $installTarget/laravel/package.json
 	rm  $installTarget/laravel/package.json.bak
 	
+	sed -i.bak 's~build~public~g' $installTarget/laravel/src/config.rb
+	rm  $installTarget/laravel/src/config.rb.bak
+	
 	# set source path
 	sed -i.bak 's~"src"~"resources/assets"~g' $installTarget/laravel/package.json
 	rm  $installTarget/laravel/package.json.bak
@@ -185,6 +188,9 @@ if [[ $installOption -eq 3 ]]; then
 	# set build path
 	sed -i.bak 's~"build"~"public"~g' $installTarget/package.json
 	rm  $installTarget/package.json.bak
+	
+	sed -i.bak 's~build~public~g' $installTarget/src/config.rb
+	rm  $installTarget/src/config.rb.bak
 	
 	# move laravel contents to root
 	cp -a $installTarget/node/. $installTarget/
@@ -324,6 +330,9 @@ if [[ $installOption -eq 6 ]]; then
 	# set build path
 	sed -i.bak 's~"build"~"public"~g' $installTarget/slim/package.json
 	rm  $installTarget/slim/package.json.bak
+	
+	sed -i.bak 's~build~public~g' $installTarget/slim/src/config.rb
+	rm  $installTarget/slim/src/config.rb.bak
 	
 	# copy files to root
 	cp -a $installTarget/slim/. $installTarget
