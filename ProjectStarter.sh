@@ -195,11 +195,17 @@ if [[ $installOption -eq 3 ]]; then
 	npm install --prefix $installTarget
 fi
 
-if [[ $installOption -eq 4 ]]; then
+if [[ $installOption -eq 4 ]]; then	
+	# Wordpress production installation
+	curl -O https://wordpress.org/latest.tar.gz
+	tar -xzvf latest.tar.gz -C $installTarget
+	
 	# clone repositories
-	git clone https://github.com/WordPress/WordPress $installTarget/wordpress
 	git_bb_clone $cloneOption starter-front-end.git $installTarget/frontend
 	git_bb_clone $cloneOption starter-wordpress.git $installTarget/Spire
+	
+	# remove Wordpress tar file
+	rm -f latest.tar.gz
 	
 	# remove git files
 	rm -r -f $installTarget/wordpress/.git
@@ -220,10 +226,10 @@ if [[ $installOption -eq 4 ]]; then
 	done
 	
 	# move modified wp-config.php file
-	mv $installTarget/Spire/Extras/wp-config.php $installTarget/wordpress
+	# mv $installTarget/Spire/Extras/wp-config.php $installTarget/wordpress
 	
-	#remove sample wp-config file
-	rm -f $installTarget/wordpress/wp-config-sample.php
+	# remove sample wp-config file
+	# rm -f $installTarget/wordpress/wp-config-sample.php
 			
 	#move front-end files into theme folder
 	mkdir $installTarget/Spire/src
@@ -250,6 +256,7 @@ if [[ $installOption -eq 4 ]]; then
 	cp -a $installTarget/wordpress/. $installTarget/
 	rm -r -f $installTarget/wordpress
 	rm -r -f $installTarget/.git
+
 fi
 
 echo "all done!"
