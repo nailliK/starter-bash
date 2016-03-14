@@ -84,7 +84,9 @@ echo "  [1] Front-End Project Starter Only"
 echo "  [2] Laravel 5 + Front-End Project Starter"
 echo "  [3] Node + Front-End Project Starter"
 echo "  [4] Wordpress + Theme Project Starter"
-read -p 'Choice [1, 2, 3, 4]: ' installOption
+echo "  [5] Drupal 7 + Front-End Project Starter"
+echo "  [6] Slim Framework + Front-End Project Starter"
+read -p 'Choice [1, 2, 3, 4, 5, 6]: ' installOption
 
 # choose git clone protocol
 echo ""
@@ -120,6 +122,9 @@ if [[ $installOption -eq 2 ]]; then
 	sed -i.bak 's~"build"~"public"~g' $installTarget/laravel/package.json
 	rm  $installTarget/laravel/package.json.bak
 	
+	sed -i.bak 's~build~public~g' $installTarget/laravel/src/config.rb
+	rm  $installTarget/laravel/src/config.rb.bak
+	
 	# set source path
 	sed -i.bak 's~"src"~"resources/assets"~g' $installTarget/laravel/package.json
 	rm  $installTarget/laravel/package.json.bak
@@ -140,9 +145,9 @@ if [[ $installOption -eq 2 ]]; then
 	mv -f $installTarget/_index.php $installTarget/public/index.php
 	mv -f $installTarget/_htaccess $installTarget/public/.htaccess
 	
-	# update packages
+	# install node modules and compass libraries
 	npm install --prefix $installTarget
-	composer install --working-dir $installTarget
+	composer install -d $installTarget
 fi
 
 if [[ $installOption -eq 3 ]]; then
@@ -183,6 +188,9 @@ if [[ $installOption -eq 3 ]]; then
 	# set build path
 	sed -i.bak 's~"build"~"public"~g' $installTarget/package.json
 	rm  $installTarget/package.json.bak
+	
+	sed -i.bak 's~build~public~g' $installTarget/src/config.rb
+	rm  $installTarget/src/config.rb.bak
 	
 	# move laravel contents to root
 	cp -a $installTarget/node/. $installTarget/
@@ -257,6 +265,92 @@ if [[ $installOption -eq 4 ]]; then
 	rm -r -f $installTarget/wordpress
 	rm -r -f $installTarget/.git
 
+fi
+
+if [[ $installOption -eq 5 ]]; then
+	# Is Drush installed?
+	if hash drush 2>/dev/null; then
+		echo "Found Drush"
+	else
+		echo "Installing Drush"
+		wget http://files.drush.org/drush.phar
+		chmod +x drush.phar
+		sudo mv drush.phar /usr/local/bin/drush
+		drush init
+	fi
+	# Fetch the starter-drupal, which gives us both our theme and the drush make file.
+	git_bb_clone $cloneOption starter-drupal $installTarget/starter-drupal
+	drush make $installTarget/starter-drupal/spiredigital_drupal.make.yml $installTarget/drupal
+	
+	git_bb_clone  $cloneOption starter-front-end.git $installTarget/frontend
+
+	# remove git files
+	rm -r -f $installTarget/starter-drupal/.git
+	rm -r -f $installTarget/frontend/.git
+
+	# move theme to Drupal:
+	mkdir $installTarget/drupal/sites/all/themes/contrib
+	mkdir $installTarget/drupal/sites/all/themes/contrib/starter
+	cp -a $installTarget/starter-drupal/theme/* $installTarget/drupal/sites/all/themes/contrib/starter
+
+	# change compass target
+	sed -i.bak 's~"build/css"~"public/css"~g' $installTarget/frontend/src/config.rb
+	rm  $installTarget/frontend/src/config.rb.bak
+
+	# move necessary files to theme
+	mkdir $installTarget/drupal/sites/all/themes/contrib/starter/src
+	mv -f $installTarget/frontend/.editorconfig $installTarget/drupal
+	mv -f $installTarget/frontend/.eslintrc $installTarget/drupal
+	# do we need to append this?
+	mv -f $installTarget/frontend/.gitignore $installTarget/drupal/sites/all/themes/contrib/starter
+	mv -f $installTarget/frontend/package.json $installTarget/drupal/sites/all/themes/contrib/starter
+	cp -a $installTarget/frontend/src/. $installTarget/drupal/sites/all/themes/contrib/starter/src
+
+	# remove frontend code
+	rm -r -f $installTarget/frontend
+	rm -r -f $installTarget/starter-drupal
+
+	# update packages
+	npm install --prefix $installTarget/drupal/sites/all/themes/contrib/starter
+
+	#move drupal contents to the project root
+	cp -a $installTarget/drupal/. $installTarget/
+	rm -r -f $installTarget/drupal
+fi
+
+if [[ $installOption -eq 6 ]]; then
+	# Clone Repositories
+	git_bb_clone $cloneOption starter-front-end.git $installTarget/frontend
+	git_bb_clone $cloneOption starter-slim.git $installTarget/slim
+	
+	# remove git files
+	rm -r -f $installTarget/slim/.git
+	rm -r -f $installTarget/frontend/.git
+
+	# move necessary files to project root
+	mv -f $installTarget/frontend/.editorconfig $installTarget/slim
+	mv -f $installTarget/frontend/.gitignore $installTarget/slim
+	mv -f $installTarget/frontend/.eslintrc $installTarget/slim
+	mv -f $installTarget/frontend/package.json $installTarget/slim
+	cp -a $installTarget/frontend/src/. $installTarget/slim/src
+	
+	# set build path
+	sed -i.bak 's~"build"~"public"~g' $installTarget/slim/package.json
+	rm  $installTarget/slim/package.json.bak
+	
+	sed -i.bak 's~build~public~g' $installTarget/slim/src/config.rb
+	rm  $installTarget/slim/src/config.rb.bak
+	
+	# copy files to root
+	cp -a $installTarget/slim/. $installTarget
+	
+	# remove unused directories
+	rm -r -f $installTarget/frontend
+	rm -r -f $installTarget/slim
+	
+	# install node modules and compass libraries
+	npm install --prefix $installTarget
+	composer install -d $installTarget
 fi
 
 echo "all done!"
