@@ -114,6 +114,7 @@ if [[ $installOption -eq 2 ]]; then
 	mv -f $installTarget/frontend/.editorconfig $installTarget/laravel
 	mv -f $installTarget/frontend/.eslintrc $installTarget/laravel
 	mv -f $installTarget/frontend/index.html $installTarget/laravel/resources/views/welcome.blade.php
+	mv -f $installTarget/frontend/src/config.rb $installTarget/laravel
 	
 	# move front-end files to resources/assets folder
 	cp -a $installTarget/frontend/src/. $installTarget/laravel/resources/assets/
@@ -122,11 +123,8 @@ if [[ $installOption -eq 2 ]]; then
 	sed -i.bak 's~"build"~"public"~g' $installTarget/laravel/package.json
 	rm  $installTarget/laravel/package.json.bak
 	
-	sed -i.bak 's~build~public~g' $installTarget/laravel/src/config.rb
-	rm  $installTarget/laravel/src/config.rb.bak
-	
 	# set source path
-	sed -i.bak 's~"src"~"resources/assets"~g' $installTarget/laravel/package.json
+	sed -i.bak 's~"src"~g' $installTarget/laravel/package.json
 	rm  $installTarget/laravel/package.json.bak
 	
 	# change css and javascript directory in welcome script
