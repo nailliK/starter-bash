@@ -112,6 +112,7 @@ if [[ $installOption -eq 2 ]]; then
 	# move necessary files to project root
 	mv -f $installTarget/frontend/package.json $installTarget/laravel
 	mv -f $installTarget/frontend/.editorconfig $installTarget/laravel
+	mv -f $installTarget/frontend/gulpfile.js $installTarget/slim
 	mv -f $installTarget/frontend/.eslintrc $installTarget/laravel
 	mv -f $installTarget/frontend/index.html $installTarget/laravel/resources/views/welcome.blade.php
 	mv -f $installTarget/frontend/src/config.rb $installTarget/laravel
@@ -161,6 +162,7 @@ if [[ $installOption -eq 3 ]]; then
 	# move necessary files to project root
 	mv -f $installTarget/frontend/.editorconfig $installTarget/node
 	mv -f $installTarget/frontend/.eslintrc $installTarget/node
+	mv -f $installTarget/frontend/gulpfile.js $installTarget/node
 	
 	# install mergeJSON library + dependencies
 	sudo easy_install SimpleJson
@@ -242,6 +244,7 @@ if [[ $installOption -eq 4 ]]; then
 	mv -f $installTarget/frontend/.editorconfig $installTarget/Spire
 	mv -f $installTarget/frontend/.eslintrc $installTarget/Spire
 	mv -f $installTarget/frontend/.gitignore $installTarget/Spire
+	mv -f $installTarget/frontend/gulpfile.js $installTarget/Spire
 	mv -f $installTarget/frontend/package.json $installTarget/Spire
 	cp -a $installTarget/frontend/src/. $installTarget/Spire/src
 	
@@ -299,6 +302,7 @@ if [[ $installOption -eq 5 ]]; then
 	mkdir $installTarget/drupal/sites/all/themes/contrib/starter/src
 	mv -f $installTarget/frontend/.editorconfig $installTarget/drupal
 	mv -f $installTarget/frontend/.eslintrc $installTarget/drupal
+	mv -f $installTarget/frontend/gulpfile.js $installTarget/drupal
 	# do we need to append this?
 	mv -f $installTarget/frontend/.gitignore $installTarget/drupal/sites/all/themes/contrib/starter
 	mv -f $installTarget/frontend/package.json $installTarget/drupal/sites/all/themes/contrib/starter
@@ -328,6 +332,7 @@ if [[ $installOption -eq 6 ]]; then
 	# move necessary files to project root
 	mv -f $installTarget/frontend/.editorconfig $installTarget/slim
 	mv -f $installTarget/frontend/.gitignore $installTarget/slim
+	mv -f $installTarget/frontend/gulpfile.js $installTarget/slim
 	mv -f $installTarget/frontend/.eslintrc $installTarget/slim
 	mv -f $installTarget/frontend/package.json $installTarget/slim
 	cp -a $installTarget/frontend/src/. $installTarget/slim/src
